@@ -1,4 +1,4 @@
-Prompt for Codex — Generate the complete ServiceRegistry project with Redis-based service storage. Do not ask any questions or require confirmations. Output must include everything and be fully functional.
+Prompt for Codex — Generate the complete ServiceRegistry project with Redis-based service storage. Do not ask any questions or require confirmations. Output must include everything and be fully functional. Assume nothing exists beforehand.
 
 Project Name: ServiceRegistry
 
@@ -8,6 +8,10 @@ ServiceRegistry/
     ├── ServiceRegistration.Client/       # NuGet-ready package to auto-register/deregister services
     ├── ServiceRegistry.Monitor/          # Minimal API backend that uses Redis to store service info
     └── ServiceRegistry.Dashboard/        # Blazor Server dashboard showing service statuses
+
+🚫 Start from scratch.
+- Do NOT rely on any pre-existing code, binaries, project files, or resources.
+- All source code, configuration, and project files must be created fresh.
 
 📦 1. ServiceRegistration.Client
 - A .NET class library to be used as a NuGet package.
@@ -38,21 +42,19 @@ ServiceRegistry/
   - `LastChecked`
   - `HealthCheckUrl`
 - Uses clean styling. Tailwind is optional.
+- Responsive and production-ready.
 
 📝 4. README.md
-- Describe architecture, structure, and how to run each part.
-- Mention that Redis should be running locally on port 6379.
-- Include setup instructions for development.
+- Describe the full architecture.
+- List all projects with purpose and usage.
+- Include setup instructions for local development.
+- Mention that Redis must be running at `localhost:6379`.
 
 🗂️ 5. .gitignore
-- Ignore standard .NET build/output artifacts: `bin/`, `obj/`, `.vs/`, `.vscode/`, `*.user`, `*.suo`.
+- Standard .NET ignores:
+  - `bin/`, `obj/`, `.vs/`, `.vscode/`, `*.user`, `*.suo`
 
-📦 6. Output
-- All projects and files listed above must be included.
-- Do not prompt for any input.
-- Do not use placeholders or empty files — everything must be functional.
-- Do not include Docker support unless explicitly stated.
-
-✅ Use .NET 8 (assume it's installed).
-✅ Do not include any interactive setup or questions.
-✅ Output structure must be ready for immediate `git init`, commit, and push to GitHub.
+✅ Use .NET 8 (assume it’s installed).
+✅ No interactive setup.
+✅ No zip, no binaries, no placeholders.
+✅ All projects must be valid, buildable, and logically complete.
