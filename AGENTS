@@ -1,0 +1,50 @@
+Create a complete project called `ServiceRegistry` with the following structure. The system monitors registered ASP.NET Core services and displays their status via a Blazor dashboard. Store registered service data in Redis (not in-memory). Do not ask any questions — just generate everything and zip it.
+
+📁 Project Root: ServiceRegistry  
+📁 Source Folder: src/
+
+1. 📦 Project: `ServiceRegistration.Client`
+- A .NET class library designed for NuGet.
+- Contains an `IHostedService` that:
+  - Registers the app to a central monitor by POSTing to `/api/registry/register` on startup.
+  - Deregisters via POST to `/api/registry/deregister` on shutdown.
+- Uses `ServiceRegistrationOptions` for configuration.
+- Has `AddServiceRegistration(...)` extension to register the hosted service.
+
+2. ⚙️ Project: `ServiceRegistry.Monitor`
+- An ASP.NET Core minimal API that:
+  - Accepts service registration: `POST /api/registry/register`
+  - Accepts deregistration: `POST /api/registry/deregister`
+  - Returns all registered services with health data: `GET /api/registry/all`
+- Uses Redis to store registered services using StackExchange.Redis.
+- On `/api/registry/all`, pings each service’s `HealthCheckUrl` (GET, 2s timeout).
+- Parses the health JSON into fields: `status`, `version`, `environment`
+- Updates service state in Redis.
+- Marks `status = Unreachable` if the health request fails or times out.
+
+3. 🖥️ Project: `ServiceRegistry.Dashboard`
+- Blazor Server app.
+- Calls `/api/registry/all` to retrieve registered services and displays them in a responsive card layout.
+- For each service, shows:
+  - `ServiceName`
+  - `Status` (with colored label: green = Healthy, red = Unreachable)
+  - `Version`
+  - `Environment`
+  - `LastChecked`
+  - `HealthCheckUrl`
+- Uses clean styling (Tailwind optional).
+- No JavaScript required.
+
+4. 📄 File: `README.md`
+- Describes the full architecture.
+- Lists all projects with purpose and usage.
+- Includes local development instructions (e.g., Redis must be running at `localhost:6379`).
+
+5. 🗂️ File: `.gitignore`
+- Standard .NET ignore entries:
+  - `bin/`, `obj/`, `.vs/`, `.vscode/`, `*.user`, `*.suo`
+
+6. 📦 Output: `ServiceRegistry.zip`
+- All the above projects and files must be bundled into `ServiceRegistry.zip` and ready to download.
+
+⚠️ Do not ask any questions. Just create the files, directories, and ZIP archive. Assume .NET 8.
