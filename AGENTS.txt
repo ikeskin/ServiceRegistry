@@ -1,0 +1,58 @@
+Prompt for Codex — Generate the complete ServiceRegistry project with Redis-based service storage. Do not ask any questions or require confirmations. Output must include everything and be fully functional.
+
+Project Name: ServiceRegistry
+
+📁 Structure:
+ServiceRegistry/
+└── src/
+    ├── ServiceRegistration.Client/       # NuGet-ready package to auto-register/deregister services
+    ├── ServiceRegistry.Monitor/          # Minimal API backend that uses Redis to store service info
+    └── ServiceRegistry.Dashboard/        # Blazor Server dashboard showing service statuses
+
+📦 1. ServiceRegistration.Client
+- A .NET class library to be used as a NuGet package.
+- Provides `IHostedService` that:
+  - On startup, sends a POST to `/api/registry/register` with service name, instance ID, and health check URL.
+  - On shutdown, sends a POST to `/api/registry/deregister`.
+- Configuration is injected via `ServiceRegistrationOptions`.
+- Adds extension method `AddServiceRegistration(...)` for easy integration.
+
+⚙️ 2. ServiceRegistry.Monitor
+- Minimal ASP.NET Core API (WebApplication-based).
+- Routes:
+  - POST `/api/registry/register`: Adds or updates a service in Redis.
+  - POST `/api/registry/deregister`: Removes a service from Redis.
+  - GET `/api/registry/all`: Pings each registered service’s `HealthCheckUrl` and updates Redis entries.
+- Uses StackExchange.Redis (connect to `localhost:6379`).
+- Health check responses are expected to return JSON with: `status`, `version`, `environment`.
+- If ping fails or times out (2 seconds), service status is marked as `"Unreachable"`.
+
+🖥️ 3. ServiceRegistry.Dashboard
+- A Blazor Server app.
+- On page load, calls `/api/registry/all` to retrieve registered services.
+- Displays each service in a card layout:
+  - `ServiceName`
+  - `Status` (green for Healthy, red for Unreachable)
+  - `Version`
+  - `Environment`
+  - `LastChecked`
+  - `HealthCheckUrl`
+- Uses clean styling. Tailwind is optional.
+
+📝 4. README.md
+- Describe architecture, structure, and how to run each part.
+- Mention that Redis should be running locally on port 6379.
+- Include setup instructions for development.
+
+🗂️ 5. .gitignore
+- Ignore standard .NET build/output artifacts: `bin/`, `obj/`, `.vs/`, `.vscode/`, `*.user`, `*.suo`.
+
+📦 6. Output
+- All projects and files listed above must be included.
+- Do not prompt for any input.
+- Do not use placeholders or empty files — everything must be functional.
+- Do not include Docker support unless explicitly stated.
+
+✅ Use .NET 8 (assume it's installed).
+✅ Do not include any interactive setup or questions.
+✅ Output structure must be ready for immediate `git init`, commit, and push to GitHub.
