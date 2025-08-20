@@ -1,0 +1,42 @@
+@page "/"
+
+<PageTitle>Services</PageTitle>
+
+@inject IHttpClientFactory ClientFactory
+
+@if (services is null)
+{
+    <p>Loading...</p>
+}
+else if (services.Count == 0)
+{
+    <p>No services registered.</p>
+}
+else
+{
+    <div class="cards">
+        @foreach (var svc in services)
+        {
+            <div class="card">
+                <h3>@svc.ServiceName (@svc.InstanceId)</h3>
+                <p class="status @(svc.Status == "Healthy" ? "healthy" : "unreachable")">@svc.Status</p>
+                <p>Version: @svc.Version</p>
+                <p>Environment: @svc.Environment</p>
+                <p>Last Checked: @svc.LastChecked</p>
+                <p><a href="@svc.HealthCheckUrl" target="_blank">Health Check</a></p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ServiceEntry>? services;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("monitor");
+        services = await client.GetFromJsonAsync<List<ServiceEntry>>("/api/registry/all");
+    }
+
+    public record ServiceEntry(string ServiceName, string InstanceId, string HealthCheckUrl, string Status, string Version, string Environment, DateTime LastChecked);
+}

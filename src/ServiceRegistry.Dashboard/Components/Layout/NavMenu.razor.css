@@ -1,0 +1,10 @@
+.menu {
+    padding: 1rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
